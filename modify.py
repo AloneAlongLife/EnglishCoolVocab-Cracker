@@ -186,7 +186,7 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
     data["Currency"]["seed"] = "0"
     data["Currency"]["fruit"] = base_data
     new_str = dumps(data).decode("utf-8").replace(",", ", ").replace("[", "[ ").replace("]", " ]")
-    print(data)
+    print(unquote(raw_str))
     print(new_str)
     new_str = quote(new_str)
 
