@@ -32,11 +32,11 @@ def gen(target_level: int, pets: str) -> bytes:
     # TODO: Custom
     base_data[target_level - 1] = "100000"
     data["Currency"]["fruit"] = base_data
-    new_str = quote_plus(dumps(data).decode("utf-8"))
+    new_str = quote_plus(dumps(data).decode("utf-8").replace(",", ", ").replace("[", "[ ").replace("]", " ]"))
     with open("com.EnglishCool.Vocab.v2.playerprefs.xml", mode="w") as xml_file:
         xml_file.write(raw_data.replace(raw_str, new_str))
 
-    # update_f_data()
+    update_f_data()
 
     start()
     timeout = time()
