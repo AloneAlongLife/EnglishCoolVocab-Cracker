@@ -185,7 +185,7 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
     data = loads(unquote(raw_str))
     data["Currency"]["seed"] = "0"
     data["Currency"]["fruit"] = base_data
-    new_str = dumps(data).decode("utf-8")
+    new_str = dumps(data).decode("utf-8").replace(",", ", ").replace("[", "[ ").replace("]", " ]")
     new_str = quote(new_str)
 
     with open("com.EnglishCool.Vocab.v2.playerprefs.xml", mode="w") as xml_file:
