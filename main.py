@@ -5,7 +5,7 @@ from asyncio import CancelledError, Queue, sleep as asleep, get_running_loop
 from datetime import datetime
 from io import BytesIO
 from os import getpid, system
-from time import time
+from time import time, sleep
 from traceback import format_exc
 
 from discord import ApplicationContext, Bot, Embed, File, Interaction, Option
@@ -184,6 +184,7 @@ async def update(
         return
     await ctx.respond(content="Restarting...")
     system("start cmd /c \"git pull && start.cmd\"")
+    sleep(5)
     system(f"taskkill /f /pid {getpid()}")
 
 if __name__ == "__main__":

@@ -169,14 +169,13 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
 
     # 更新字彙果
     fruit = total_fruit - sum(map(lambda pet: PETS_FRUIT[pet], pets)) if fruit == -1 else fruit
-    fruit = max(0, fruit)
 
     with open("com.EnglishCool.Vocab.v2.playerprefs.xml") as xml_file:
         raw_data = xml_file.read()
     raw_str = ET.fromstring(raw_data).find("string[@name='data']").text
 
     base_data = ["0"] * 15
-    base_data[target_level - 1] = str(fruit)
+    base_data[target_level - 1] = str(max(0, fruit))
 
     data = loads(unquote(raw_str))
     data["Currency"]["seed"] = "0"
