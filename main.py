@@ -152,7 +152,7 @@ async def get_code(
     ctx: ApplicationContext,
     target_level: int = 6,
     pets: str = "",
-    fruits: int = None
+    fruits: int = -1
 ):
     print(f"User: {ctx.author.display_name}")
     embed = Embed(
@@ -169,6 +169,7 @@ async def get_code(
     response = await ctx.respond(
         embed=embed,
     )
+    fruits = None if fruits == -1 else fruits
     await task_queue.put((target_level, pets, fruits, response, embed))
 
 
