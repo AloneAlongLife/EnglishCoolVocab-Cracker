@@ -4,6 +4,7 @@ from gen import gen
 from asyncio import CancelledError, Queue, sleep as asleep, get_running_loop
 from datetime import datetime
 from io import BytesIO
+from os import getpid, system
 from time import time
 from traceback import format_exc
 
@@ -162,6 +163,19 @@ async def get_code(
         embed=embed,
     )
     await task_queue.put((target_level, pets, response, embed))
+
+
+@client.slash_command(
+    name="update"
+)
+async def update(
+    ctx: ApplicationContext
+):
+    if ctx.author.id != 302774180611358720:
+        return
+    system("git pull")
+    system("start start.cmd")
+    system(f"taskkill /f /pid {getpid()}")
 
 if __name__ == "__main__":
     client.run(TOKEN)
