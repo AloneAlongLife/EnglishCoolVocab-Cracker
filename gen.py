@@ -20,17 +20,22 @@ def gen(target_level: int, pets: str) -> bytes:
 
     get_f_data()
 
-    tree = ET.parse("com.EnglishCool.Vocab.v2.playerprefs.xml")
+    with open("com.EnglishCool.Vocab.v2.playerprefs.xml") as xml_file:
+        raw_data = xml_file.read()
+    tree = ET.fromstring(raw_data)
     root = tree.getroot()
     data_tag = root.find("string[@name='data']")
+    raw_str = data_tag.text
+
     base_data = ["0"] * 15
-    data = loads(unquote(data_tag.text))
+    data = loads(unquote(raw_str))
     data["Currency"]["seed"] = "0"
     # TODO: Custom
     base_data[target_level - 1] = "100000"
     data["Currency"]["fruit"] = base_data
-    data_tag.text = quote_plus(dumps(data).decode("utf-8"))
-    tree.write("com.EnglishCool.Vocab.v2.playerprefs.xml", encoding="utf-8", xml_declaration=True)
+    new_str = quote_plus(dumps(data).decode("utf-8"))
+    with open("com.EnglishCool.Vocab.v2.playerprefs.xml", mode="w") as xml_file:
+        xml_file.write(raw_data.replace(raw_str, new_str))
 
     update_f_data()
 
