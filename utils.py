@@ -21,17 +21,17 @@ def swipe(x: int, y: int, dx: int = 0, dy: int = 0, t: int = 100):
     run(f"adb -s {HOST_NAME} shell input swipe {x} {y} {x + dx} {y + dy} {t}")
 
 def start():
-    run(f"adb -s {HOST_NAME} shell am start com.EnglishCool.Vocab/com.unity3d.player.UnityPlayerActivity")
+    run(f"adb -s {HOST_NAME} shell su -c am start com.EnglishCool.Vocab/com.unity3d.player.UnityPlayerActivity")
 
 def stop():
-    run(f"adb -s {HOST_NAME} shell am force-stop com.EnglishCool.Vocab")
+    run(f"adb -s {HOST_NAME} shell su -c am force-stop com.EnglishCool.Vocab")
 
 def get_data():
     run(f"adb -s {HOST_NAME} pull /storage/emulated/0/Android/data/com.EnglishCool.Vocab/files/wordcool_user.db")
 
 def update_data():
     run(f"adb -s {HOST_NAME} push wordcool_user.db /sdcard/Download/")
-    run(f"adb -s {HOST_NAME} shell mv /sdcard/Download/wordcool_user.db /storage/emulated/0/Android/data/com.EnglishCool.Vocab/files/wordcool_user.db")
+    run(f"adb -s {HOST_NAME} shell su -c mv /sdcard/Download/wordcool_user.db /storage/emulated/0/Android/data/com.EnglishCool.Vocab/files/wordcool_user.db")
 
 def get_f_data():
     run(f"adb -s {HOST_NAME} shell su -c cp /data/data/com.EnglishCool.Vocab/shared_prefs/com.EnglishCool.Vocab.v2.playerprefs.xml /sdcard/Download/com.EnglishCool.Vocab.v2.playerprefs.xml")
@@ -40,4 +40,4 @@ def get_f_data():
 
 def update_f_data():
     run(f"adb -s {HOST_NAME} push com.EnglishCool.Vocab.v2.playerprefs.xml /sdcard/Download/")
-    run(f"adb -s {HOST_NAME} shell mv /sdcard/Download/com.EnglishCool.Vocab.v2.playerprefs.xml /data/data/com.EnglishCool.Vocab/shared_prefs/com.EnglishCool.Vocab.v2.playerprefs.xml")
+    run(f"adb -s {HOST_NAME} shell su -c mv /sdcard/Download/com.EnglishCool.Vocab.v2.playerprefs.xml /data/data/com.EnglishCool.Vocab/shared_prefs/com.EnglishCool.Vocab.v2.playerprefs.xml")
