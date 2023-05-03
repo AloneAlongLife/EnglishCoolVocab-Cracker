@@ -36,7 +36,7 @@ def gen(target_level: int, pets: str) -> bytes:
     with open("com.EnglishCool.Vocab.v2.playerprefs.xml", mode="w") as xml_file:
         xml_file.write(raw_data.replace(raw_str, new_str))
 
-    update_f_data()
+    # update_f_data()
 
     start()
     timeout = time()
