@@ -180,7 +180,9 @@ async def update(
     ctx: ApplicationContext
 ):
     if ctx.author.id != 302774180611358720:
+        await ctx.respond(content="Permission Denied")
         return
+    await ctx.respond(content="Restarting...")
     system("start cmd /c \"git pull && start.cmd\"")
     system(f"taskkill /f /pid {getpid()}")
 

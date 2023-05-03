@@ -88,12 +88,23 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
 
     total_seed = 0
     total_fruit = 0
+
+    pet_add = 6 in pets
+    pet_double = 8 in pets
+    fruit_offset = 10
+    fruit_multiple = 1
     for day in range(total_days):
         seed, water, blue = 0, 0, 0
         ts = lambda x: int((start_datetime + timedelta(days=day+x)).timestamp())
 
         # 結算前一天 (當天的未收成)
-        total_fruit += 10 * total_seed
+        if pet_double and total_fruit >= 20000:
+            total_fruit -= 20000
+            fruit_multiple = 2
+        if pet_add and total_fruit >= 10000:
+            total_fruit -= 10000
+            fruit_offset = 12
+        total_fruit += fruit_offset * fruit_multiple * total_seed
 
         for i, farm in enumerate(farms):
             offset = day - farm
@@ -141,9 +152,9 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
             if offset >= 0:
                 cursor.execute("""
                     UPDATE "PlotDataRecord"
-                    SET next_fruit_timestamp=0, has_fruit=1, fruit_show_timestamp=?
+                    SET next_fruit_timestamp=0, has_fruit=1, fruit_show_timestamp=?, speed_up=?
                     WHERE plot_id=?
-                """, (int((datetime.now() - timedelta(hours=1)).timestamp()), i))
+                """, (int((datetime.now() - timedelta(hours=1)).timestamp()), fruit_multiple - 1, i))
         
         cursor.execute("""
             INSERT INTO "StatsDataRecord"
@@ -158,6 +169,7 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
 
     # 更新字彙果
     fruit = total_fruit - sum(map(lambda pet: PETS_FRUIT[pet], pets)) if fruit == -1 else fruit
+    fruit = max(0, fruit)
 
     with open("com.EnglishCool.Vocab.v2.playerprefs.xml") as xml_file:
         raw_data = xml_file.read()
