@@ -72,7 +72,7 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
 
     # 烏龜紀錄
     cursor.execute("DELETE FROM PetDataRecord")
-    pets = list(map(int, set(pets)))
+    pets: list = list(map(int, set(pets)))
     for i in pets:
         cursor.execute("""
             INSERT INTO "PetDataRecord"
@@ -89,8 +89,8 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
     total_seed = 0
     total_fruit = 0
 
-    pet_add = 6 in pets
     pet_double = 8 in pets
+    pet_add = 6 in pets
     fruit_offset = 10
     fruit_multiple = 1
     for day in range(total_days):
@@ -100,12 +100,14 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
         # 結算前一天 (當天的未收成)
         if pet_double and total_fruit >= 20000:
             pet_double = False
-            total_fruit -= 20000
+            total_fruit -= PETS_FRUIT[8]
+            pets.remove(8)
             fruit_multiple = 2
 
         if pet_add and total_fruit >= 10000:
             pet_add = False
-            total_fruit -= 10000
+            total_fruit -= PETS_FRUIT[6]
+            pets.remove(6)
             fruit_offset = 12
         total_fruit += fruit_offset * fruit_multiple * total_seed
 
