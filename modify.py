@@ -1,7 +1,20 @@
 import sqlite3
 from datetime import date, datetime, timedelta
 
-def run_modify(target_level: int, pets: str):
+PETS_FRUIT = [
+    1000,
+    1000,
+    1000,
+    10,
+    1000,
+    5000,
+    10000,
+    15000,
+    20000,
+    50000
+]
+
+def run_modify(target_level: int, pets: str) -> int:
     db = sqlite3.connect("wordcool_user.db")
     cursor = db.cursor()
 
@@ -55,7 +68,8 @@ def run_modify(target_level: int, pets: str):
 
     # 烏龜紀錄
     cursor.execute("DELETE FROM PetDataRecord")
-    for i in map(int, set(pets)):
+    pets = list(map(int, set(pets)))
+    for i in pets:
         cursor.execute("""
             INSERT INTO "PetDataRecord"
             ("db_id", "satiety_val", "reduce_timestamp", "play_num", "play_timestamp", "content", "content_timestamp") VALUES
@@ -67,6 +81,9 @@ def run_modify(target_level: int, pets: str):
     cursor.execute("DELETE FROM PlotDataRecord")
     cursor.execute("DELETE FROM LearningRecord")
     nts = lambda: int(datetime.now().timestamp())
+
+    total_seed = 0
+    fruit = 0
     for day in range(total):
         seed, water, blue = 0, 0, 0
         ts = lambda x: int((start_datetime + timedelta(days=day+x)).timestamp())
@@ -74,6 +91,7 @@ def run_modify(target_level: int, pets: str):
             offset = day - farm
             if offset == 0:
                 seed += 1
+                total_seed += 1
                 cursor.execute("""
                     INSERT INTO "PlotDataRecord"
                     ("db_id", "plot_id", "status", "level", "next_water_timestamp", "next_fruit_timestamp", "has_fruit", "speed_up", "fruit_show_timestamp") VALUES
@@ -118,6 +136,7 @@ def run_modify(target_level: int, pets: str):
                     SET next_fruit_timestamp=0, has_fruit=1, fruit_show_timestamp=?
                     WHERE plot_id=?
                 """, (int((datetime.now() - timedelta(hours=1)).timestamp()), i))
+        fruit += 10 * total_seed
         
         cursor.execute("""
             INSERT INTO "StatsDataRecord"
@@ -129,3 +148,5 @@ def run_modify(target_level: int, pets: str):
     db.commit()
     cursor.close()
     db.close()
+
+    return fruit - sum(map(lambda pet: PETS_FRUIT[pet], pets))

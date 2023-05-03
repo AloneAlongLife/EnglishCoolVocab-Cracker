@@ -8,7 +8,7 @@ from os import getpid, system
 from time import time
 from traceback import format_exc
 
-from discord import ApplicationContext, Bot, Embed, File, Interaction, Member, Option
+from discord import ApplicationContext, Bot, Embed, File, Interaction, Option
 
 # intents = Intents.default()
 # intents.message_content = True
@@ -62,6 +62,13 @@ options = [
         description="要加入的烏龜 請輸入0-9(0-片語龜 1-拼字龜 2-詞性龜 3-猜拳龜 4-流行語龜 5-農夫龜 6-肥料龜 7-媽媽龜 8-時間龜 9-神龜)的字串(如: 0179)",
         default="",
         max_length=10,
+    ),
+    Option(
+        int,
+        name="fruits",
+        description="果實數量",
+        require=False,
+        min_value=0,
     )
 ]
 
@@ -73,12 +80,11 @@ async def run_task():
         pets: str
         response: Interaction
         embed: Embed
-        user: Member
         while True:
             if task_queue.empty():
                 await asleep(0.5)
                 continue
-            target_level, pets, response, embed = await task_queue.get()
+            target_level, pets, fruits, response, embed = await task_queue.get()
             embed.colour = 0xff8800
             embed.title = "備份碼生成中..."
             embed.description = f"備份碼生成中，請等待約30秒。"
@@ -89,7 +95,7 @@ async def run_task():
 
             try:
                 timer = time()
-                img = await loop.run_in_executor(None, gen, target_level, pets)
+                img = await loop.run_in_executor(None, gen, target_level, pets, fruits)
                 img_io = BytesIO(img)
 
                 embed.colour = 0x00ff00
@@ -145,7 +151,8 @@ async def on_ready():
 async def get_code(
     ctx: ApplicationContext,
     target_level: int = 6,
-    pets: str = ""
+    pets: str = "",
+    fruits: int = None
 ):
     print(f"User: {ctx.author.display_name}")
     embed = Embed(
@@ -162,7 +169,7 @@ async def get_code(
     response = await ctx.respond(
         embed=embed,
     )
-    await task_queue.put((target_level, pets, response, embed))
+    await task_queue.put((target_level, pets, fruits, response, embed))
 
 
 @client.slash_command(

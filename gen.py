@@ -10,35 +10,36 @@ import xml.etree.ElementTree as ET
 from cv2 import imencode
 from orjson import loads, dumps
 
-def gen(target_level: int, pets: str) -> bytes:
+def gen(target_level: int, pets: str, fruit: int) -> bytes:
     timer = time()
     stop()
     get_data()
 
-    run_modify(target_level - 1, pets)
+    fruit_num = run_modify(target_level - 1, pets)
+    fruit = fruit if fruit else fruit_num
     update_data()
 
     get_f_data()
 
     with open("com.EnglishCool.Vocab.v2.playerprefs.xml") as xml_file:
         raw_data = xml_file.read()
-    tree = ET.fromstring(raw_data)
-    data_tag = tree.find("string[@name='data']")
-    raw_str = data_tag.text
+    raw_str = ET.fromstring(raw_data).find("string[@name='data']").text
 
     base_data = ["0"] * 15
+    base_data[target_level - 1] = str(fruit)
+
     data = loads(unquote(raw_str))
     data["Currency"]["seed"] = "0"
-    # TODO: Custom
-    base_data[target_level - 1] = "1000"
     data["Currency"]["fruit"] = base_data
-    new_str = quote_plus(dumps(data).decode("utf-8").replace(",", ", ").replace("[", "[ ").replace("]", " ]"))
+    new_str = quote_plus(dumps(data).decode("utf-8"))
+
     with open("com.EnglishCool.Vocab.v2.playerprefs.xml", mode="w") as xml_file:
         xml_file.write(raw_data.replace(raw_str, new_str))
 
     update_f_data()
 
     start()
+
     timeout = time()
     while not ident_image(get_screenshot(), "t1.png", y_range=(1670, 1920)) and time() - timeout < 60:
         sleep(0.5)
