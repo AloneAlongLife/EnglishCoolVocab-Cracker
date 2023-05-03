@@ -109,7 +109,7 @@ async def run_task():
 
             try:
                 timer = time()
-                fruit, img = await loop.run_in_executor(None, gen, target_level, pets, fruitbg, bg)
+                fruit, img = await loop.run_in_executor(None, gen, target_level, pets, fruit, bg)
                 img_io = BytesIO(img)
                 pets_list: list = list(map(int, set(pets)))
                 pets_list.sort()
