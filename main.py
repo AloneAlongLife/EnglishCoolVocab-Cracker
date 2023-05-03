@@ -67,8 +67,8 @@ options = [
         int,
         name="fruits",
         description="果實數量",
-        require=False,
-        min_value=0,
+        default=-1,
+        min_value=-1,
     )
 ]
 
