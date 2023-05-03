@@ -23,8 +23,7 @@ def gen(target_level: int, pets: str) -> bytes:
     with open("com.EnglishCool.Vocab.v2.playerprefs.xml") as xml_file:
         raw_data = xml_file.read()
     tree = ET.fromstring(raw_data)
-    root = tree.getroot()
-    data_tag = root.find("string[@name='data']")
+    data_tag = tree.find("string[@name='data']")
     raw_str = data_tag.text
 
     base_data = ["0"] * 15
