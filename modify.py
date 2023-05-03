@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import date, datetime, timedelta
+from random import randint
 from urllib.parse import quote, unquote
 import xml.etree.ElementTree as ET
 
@@ -18,13 +19,14 @@ PETS_FRUIT = [
     50000
 ]
 
-def run_modify(target_level: int, pets: str, fruit: int) -> int:
+def run_modify(target_level: int, pets: str, fruit: int, bg: int) -> int:
     db = sqlite3.connect("wordcool_user.db")
     cursor = db.cursor()
 
     dt = [1, 2, 4, 8, 14]
     e = [1, 2, 4, 8, 16]
     farms = [0] * 5 + list(range(1, 96))
+    farms.sort(key=lambda x: randint(1, 1000))
     start_date = date(2023, 3, 1)
     start_datetime = datetime.combine(start_date, datetime.now().time())
 
@@ -63,7 +65,7 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
 
     # 果園背景
     bg = ["0"] * 15
-    bg[target_level] = "1"
+    bg[target_level] = str(bg)
     bg = "".join(bg)
     if cursor.execute("SELECT * FROM User WHERE key='orchardSceneBG'").fetchone():
         cursor.execute("UPDATE 'User' SET 'value'=? WHERE key='orchardSceneBG'", (bg,))

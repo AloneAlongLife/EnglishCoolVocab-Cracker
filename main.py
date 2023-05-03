@@ -47,6 +47,12 @@ LEVELS = [
     "片語",
 ]
 
+BGS = [
+    "忘憂森林",
+    "寧靜燈塔",
+    "冬季仙境",
+]
+
 options = [
     Option(
         int,
@@ -69,7 +75,15 @@ options = [
         description="果實數量",
         default=-1,
         min_value=-1,
-    )
+    ),
+    Option(
+        int,
+        name="bg",
+        description="果園背景 (0-忘憂森林 1-寧靜燈塔 2-冬季仙境)",
+        default=0,
+        min_value=0,
+        max_value=2,
+    ),
 ]
 
 
@@ -84,7 +98,7 @@ async def run_task():
             if task_queue.empty():
                 await asleep(0.5)
                 continue
-            target_level, pets, fruit, response, embed = await task_queue.get()
+            target_level, pets, fruit, bg, response, embed = await task_queue.get()
             embed.colour = 0xff8800
             embed.title = "備份碼生成中..."
             embed.description = f"備份碼生成中，請等待約30秒。"
@@ -95,7 +109,7 @@ async def run_task():
 
             try:
                 timer = time()
-                fruit, img = await loop.run_in_executor(None, gen, target_level, pets, fruit)
+                fruit, img = await loop.run_in_executor(None, gen, target_level, pets, fruitbg, bg)
                 img_io = BytesIO(img)
                 pets_list: list = list(map(int, set(pets)))
                 pets_list.sort()
@@ -114,6 +128,7 @@ async def run_task():
                 embed.add_field(name="字彙果數量", value=f"{fruit}顆", inline=False)
                 embed.add_field(
                     name="目標果園", value=LEVELS[target_level - 1], inline=False)
+                embed.add_field(name="果園背景", value=BGS[bg], inline=False)
                 embed.add_field(name="烏龜", value="\n".join(
                     map(lambda i: PETS[i], pets_list or [10,])), inline=False)
 
@@ -155,7 +170,8 @@ async def get_code(
     ctx: ApplicationContext,
     target_level: int = 6,
     pets: str = "",
-    fruit: int = -1
+    fruit: int = -1,
+    bg: int = 0,
 ):
     print(f"User: {ctx.author.display_name}")
     embed = Embed(
@@ -172,7 +188,7 @@ async def get_code(
     response = await ctx.respond(
         embed=embed,
     )
-    await task_queue.put((target_level, pets, fruit, response, embed))
+    await task_queue.put((target_level, pets, fruitbg, bg, response, embed))
 
 
 @client.slash_command(
