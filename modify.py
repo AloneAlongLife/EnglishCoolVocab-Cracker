@@ -99,9 +99,12 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
 
         # 結算前一天 (當天的未收成)
         if pet_double and total_fruit >= 20000:
+            pet_double = False
             total_fruit -= 20000
             fruit_multiple = 2
+
         if pet_add and total_fruit >= 10000:
+            pet_add = False
             total_fruit -= 10000
             fruit_offset = 12
         total_fruit += fruit_offset * fruit_multiple * total_seed
