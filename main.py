@@ -181,8 +181,7 @@ async def update(
 ):
     if ctx.author.id != 302774180611358720:
         return
-    system("git pull")
-    system("start start.cmd")
+    system("start cmd /c \"git pull && start.cmd\"")
     system(f"taskkill /f /pid {getpid()}")
 
 if __name__ == "__main__":
