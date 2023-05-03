@@ -3,39 +3,18 @@ from match_template import ident_image
 from modify import run_modify
 
 from time import sleep, time
-from urllib.parse import quote_plus, unquote
-
-import xml.etree.ElementTree as ET
 
 from cv2 import imencode
-from orjson import loads, dumps
 
 def gen(target_level: int, pets: str, fruit: int) -> bytes:
     timer = time()
     stop()
     get_data()
-
-    fruit_num = run_modify(target_level - 1, pets)
-    fruit = fruit if fruit else fruit_num
-    update_data()
-
     get_f_data()
 
-    with open("com.EnglishCool.Vocab.v2.playerprefs.xml") as xml_file:
-        raw_data = xml_file.read()
-    raw_str = ET.fromstring(raw_data).find("string[@name='data']").text
-
-    base_data = ["0"] * 15
-    base_data[target_level - 1] = str(fruit)
-
-    data = loads(unquote(raw_str))
-    data["Currency"]["seed"] = "0"
-    data["Currency"]["fruit"] = base_data
-    new_str = quote_plus(dumps(data).decode("utf-8"))
-
-    with open("com.EnglishCool.Vocab.v2.playerprefs.xml", mode="w") as xml_file:
-        xml_file.write(raw_data.replace(raw_str, new_str))
-
+    run_modify(target_level - 1, pets, fruit)
+    
+    update_data()
     update_f_data()
 
     start()

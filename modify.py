@@ -1,5 +1,9 @@
 import sqlite3
 from datetime import date, datetime, timedelta
+from urllib.parse import quote_plus, unquote
+import xml.etree.ElementTree as ET
+
+from orjson import loads, dumps
 
 PETS_FRUIT = [
     1000,
@@ -14,7 +18,7 @@ PETS_FRUIT = [
     50000
 ]
 
-def run_modify(target_level: int, pets: str) -> int:
+def run_modify(target_level: int, pets: str, fruit: int) -> int:
     db = sqlite3.connect("wordcool_user.db")
     cursor = db.cursor()
 
@@ -31,13 +35,13 @@ def run_modify(target_level: int, pets: str) -> int:
     if type(target_level) == str:
         target_level = int(target_level) - 1
 
-    total = (target_date - start_date).days + 1
+    total_days = (target_date - start_date).days + 1
 
     # 登入紀錄
     if cursor.execute("SELECT * FROM User WHERE key='loginDays'").fetchone():
-        cursor.execute("UPDATE 'User' SET 'value'=? WHERE key='loginDays'", ("1" * total,))
+        cursor.execute("UPDATE 'User' SET 'value'=? WHERE key='loginDays'", ("1" * total_days,))
     else:
-        cursor.execute("INSERT INTO 'User' ('key', 'value') VALUES ('loginDays', ?)", ("1" * total,))
+        cursor.execute("INSERT INTO 'User' ('key', 'value') VALUES ('loginDays', ?)", ("1" * total_days,))
 
     # 註冊日期
     if cursor.execute("SELECT * FROM User WHERE key='startDate'").fetchone():
@@ -83,8 +87,8 @@ def run_modify(target_level: int, pets: str) -> int:
     nts = lambda: int(datetime.now().timestamp())
 
     total_seed = 0
-    fruit = 0
-    for day in range(total):
+    total_fruit = 0
+    for day in range(total_days):
         seed, water, blue = 0, 0, 0
         ts = lambda x: int((start_datetime + timedelta(days=day+x)).timestamp())
         for i, farm in enumerate(farms):
@@ -149,4 +153,20 @@ def run_modify(target_level: int, pets: str) -> int:
     cursor.close()
     db.close()
 
-    return fruit - sum(map(lambda pet: PETS_FRUIT[pet], pets))
+    # 更新字彙果
+    fruit = total_fruit - sum(map(lambda pet: PETS_FRUIT[pet], pets)) if fruit == -1 else fruit
+
+    with open("com.EnglishCool.Vocab.v2.playerprefs.xml") as xml_file:
+        raw_data = xml_file.read()
+    raw_str = ET.fromstring(raw_data).find("string[@name='data']").text
+
+    base_data = ["0"] * 15
+    base_data[target_level - 1] = str(fruit)
+
+    data = loads(unquote(raw_str))
+    data["Currency"]["seed"] = "0"
+    data["Currency"]["fruit"] = base_data
+    new_str = quote_plus(dumps(data).decode("utf-8"))
+
+    with open("com.EnglishCool.Vocab.v2.playerprefs.xml", mode="w") as xml_file:
+        xml_file.write(raw_data.replace(raw_str, new_str))

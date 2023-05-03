@@ -65,7 +65,7 @@ options = [
     ),
     Option(
         int,
-        name="fruits",
+        name="fruit",
         description="果實數量",
         default=-1,
         min_value=-1,
@@ -84,7 +84,7 @@ async def run_task():
             if task_queue.empty():
                 await asleep(0.5)
                 continue
-            target_level, pets, fruits, response, embed = await task_queue.get()
+            target_level, pets, fruit, response, embed = await task_queue.get()
             embed.colour = 0xff8800
             embed.title = "備份碼生成中..."
             embed.description = f"備份碼生成中，請等待約30秒。"
@@ -95,7 +95,7 @@ async def run_task():
 
             try:
                 timer = time()
-                img = await loop.run_in_executor(None, gen, target_level, pets, fruits)
+                img = await loop.run_in_executor(None, gen, target_level, pets, fruit)
                 img_io = BytesIO(img)
 
                 embed.colour = 0x00ff00
@@ -152,7 +152,7 @@ async def get_code(
     ctx: ApplicationContext,
     target_level: int = 6,
     pets: str = "",
-    fruits: int = -1
+    fruit: int = -1
 ):
     print(f"User: {ctx.author.display_name}")
     embed = Embed(
@@ -169,8 +169,7 @@ async def get_code(
     response = await ctx.respond(
         embed=embed,
     )
-    fruits = None if fruits == -1 else fruits
-    await task_queue.put((target_level, pets, fruits, response, embed))
+    await task_queue.put((target_level, pets, fruit, response, embed))
 
 
 @client.slash_command(
