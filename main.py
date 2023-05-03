@@ -97,6 +97,8 @@ async def run_task():
                 timer = time()
                 fruit, img = await loop.run_in_executor(None, gen, target_level, pets, fruit)
                 img_io = BytesIO(img)
+                pets_list: list = list(map(int, set(pets)))
+                pets_list.sort()
 
                 embed.colour = 0x00ff00
                 embed.title = "備份碼生成完成"
@@ -113,7 +115,7 @@ async def run_task():
                 embed.add_field(
                     name="目標果園", value=LEVELS[target_level - 1], inline=False)
                 embed.add_field(name="烏龜", value="\n".join(
-                    map(lambda i: PETS[int(i)], set(pets) or {10, })), inline=False)
+                    map(lambda i: PETS[i], pets_list or [10,])), inline=False)
 
                 message = await message.edit(
                     embed=embed,
