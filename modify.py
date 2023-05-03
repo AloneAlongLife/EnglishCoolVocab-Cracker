@@ -140,7 +140,7 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
                     SET next_fruit_timestamp=0, has_fruit=1, fruit_show_timestamp=?
                     WHERE plot_id=?
                 """, (int((datetime.now() - timedelta(hours=1)).timestamp()), i))
-        fruit += 10 * total_seed
+        total_fruit += 10 * total_seed
         
         cursor.execute("""
             INSERT INTO "StatsDataRecord"
