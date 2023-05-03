@@ -40,4 +40,5 @@ def get_f_data():
 
 def update_f_data():
     run(f"adb -s {HOST_NAME} push com.EnglishCool.Vocab.v2.playerprefs.xml /sdcard/Download/")
-    run(f"adb -s {HOST_NAME} shell su -c mv /sdcard/Download/com.EnglishCool.Vocab.v2.playerprefs.xml /data/data/com.EnglishCool.Vocab/shared_prefs/com.EnglishCool.Vocab.v2.playerprefs.xml")
+    run(f"adb -s {HOST_NAME} shell \"su -c cat /sdcard/Download/com.EnglishCool.Vocab.v2.playerprefs.xml > /data/data/com.EnglishCool.Vocab/shared_prefs/com.EnglishCool.Vocab.v2.playerprefs.xml\"")
+    run(f"adb -s {HOST_NAME} shell su -c rm /sdcard/Download/com.EnglishCool.Vocab.v2.playerprefs.xml")
