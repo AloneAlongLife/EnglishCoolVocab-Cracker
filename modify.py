@@ -174,7 +174,6 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
 
     # 更新字彙果
     fruit = total_fruit - sum(map(lambda pet: PETS_FRUIT[pet], pets)) if fruit == -1 else fruit
-    print(fruit)
 
     with open("com.EnglishCool.Vocab.v2.playerprefs.xml") as xml_file:
         raw_data = xml_file.read()
@@ -186,7 +185,9 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
     data = loads(unquote(raw_str))
     data["Currency"]["seed"] = "0"
     data["Currency"]["fruit"] = base_data
-    new_str = quote(dumps(data).decode("utf-8").replace(",", ", ").replace("[", "[ ").replace("]", " ]")).replace("/", "%2F")
+    new_str = dumps(data).decode("utf-8").replace(",", ", ").replace("[", "[ ").replace("]", " ]")
+    print(new_str)
+    new_str = quote(new_str)
 
     with open("com.EnglishCool.Vocab.v2.playerprefs.xml", mode="w") as xml_file:
         xml_file.write(raw_data.replace(raw_str, new_str))
