@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import date, datetime, timedelta
-from urllib.parse import quote_plus, unquote
+from urllib.parse import quote, unquote
 import xml.etree.ElementTree as ET
 
 from orjson import loads, dumps
@@ -186,7 +186,7 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
     data = loads(unquote(raw_str))
     data["Currency"]["seed"] = "0"
     data["Currency"]["fruit"] = base_data
-    new_str = quote_plus(dumps(data).decode("utf-8").replace(",", ", ").replace("[", "[ ").replace("]", " ]")).replace("+", "%20")
+    new_str = quote(dumps(data).decode("utf-8").replace(",", ", ").replace("[", "[ ").replace("]", " ]")).replace("/", "%2F")
 
     with open("com.EnglishCool.Vocab.v2.playerprefs.xml", mode="w") as xml_file:
         xml_file.write(raw_data.replace(raw_str, new_str))
