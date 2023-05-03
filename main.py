@@ -95,7 +95,7 @@ async def run_task():
 
             try:
                 timer = time()
-                img = await loop.run_in_executor(None, gen, target_level, pets, fruit)
+                fruit, img = await loop.run_in_executor(None, gen, target_level, pets, fruit)
                 img_io = BytesIO(img)
 
                 embed.colour = 0x00ff00
@@ -109,6 +109,7 @@ async def run_task():
                     "4.輸入以下圖片中之備份密碼。"
                 ]), inline=False)
 
+                embed.add_field(name="字彙果數量", value=f"{fruit}顆", inline=False)
                 embed.add_field(
                     name="目標果園", value=LEVELS[target_level - 1], inline=False)
                 embed.add_field(name="烏龜", value="\n".join(

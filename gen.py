@@ -6,13 +6,13 @@ from time import sleep, time
 
 from cv2 import imencode
 
-def gen(target_level: int, pets: str, fruit: int) -> bytes:
+def gen(target_level: int, pets: str, fruit: int) -> tuple[int, bytes]:
     timer = time()
     stop()
     get_data()
     get_f_data()
 
-    run_modify(target_level - 1, pets, fruit)
+    fruit = run_modify(target_level - 1, pets, fruit)
     
     update_data()
     update_f_data()
@@ -39,4 +39,4 @@ def gen(target_level: int, pets: str, fruit: int) -> bytes:
     print(f"Finish {time() - timer}s")
     stop()
 
-    return imencode(".png", screen_shot[770:890, 300:780])[1].tobytes()
+    return fruit, imencode(".png", screen_shot[770:890, 300:780])[1].tobytes()

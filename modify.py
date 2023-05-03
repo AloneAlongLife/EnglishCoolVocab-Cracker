@@ -170,3 +170,5 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
 
     with open("com.EnglishCool.Vocab.v2.playerprefs.xml", mode="w") as xml_file:
         xml_file.write(raw_data.replace(raw_str, new_str))
+    
+    return fruit
