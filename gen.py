@@ -1,10 +1,14 @@
-from utils import get_data, get_screenshot, start, stop, swipe, tap, update_data
+from utils import get_data, get_f_data, get_screenshot, start, stop, swipe, tap, update_data, update_f_data
 from match_template import ident_image
 from modify import run_modify
 
 from time import sleep, time
+from urllib.parse import quote_plus, unquote
+
+import xml.etree.ElementTree as ET
 
 from cv2 import imencode
+from orjson import loads, dumps
 
 def gen(target_level: int, pets: str) -> bytes:
     timer = time()
@@ -13,6 +17,22 @@ def gen(target_level: int, pets: str) -> bytes:
 
     run_modify(target_level - 1, pets)
     update_data()
+
+    get_f_data()
+
+    tree = ET.parse("com.EnglishCool.Vocab.v2.playerprefs.xml")
+    root = tree.getroot()
+    data_tag = root.find("string[@name='data']")
+    base_data = ["0"] * 15
+    data = loads(unquote(data_tag.text))
+    data["Currency"]["seed"] = "0"
+    # TODO: Custom
+    base_data[target_level - 1] = "100000"
+    data["Currency"]["fruit"] = base_data
+    data_tag.text = quote_plus(dumps(data).decode("utf-8"))
+    tree.write("com.EnglishCool.Vocab.v2.playerprefs.xml", encoding="utf-8", xml_declaration=True)
+
+    update_f_data()
 
     start()
     timeout = time()
