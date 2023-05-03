@@ -1,1 +1,1 @@
-.\.venv\Scripts\activate.bat && python main.py
+start /c .\.venv\Scripts\activate.bat && python main.py
