@@ -188,7 +188,7 @@ async def get_code(
     response = await ctx.respond(
         embed=embed,
     )
-    await task_queue.put((target_level, pets, fruitbg, bg, response, embed))
+    await task_queue.put((target_level, pets, fruit, bg, response, embed))
 
 
 @client.slash_command(
