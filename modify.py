@@ -91,6 +91,10 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
     for day in range(total_days):
         seed, water, blue = 0, 0, 0
         ts = lambda x: int((start_datetime + timedelta(days=day+x)).timestamp())
+
+        # 結算前一天 (當天的未收成)
+        total_fruit += 10 * total_seed
+
         for i, farm in enumerate(farms):
             offset = day - farm
             if offset == 0:
@@ -140,7 +144,6 @@ def run_modify(target_level: int, pets: str, fruit: int) -> int:
                     SET next_fruit_timestamp=0, has_fruit=1, fruit_show_timestamp=?
                     WHERE plot_id=?
                 """, (int((datetime.now() - timedelta(hours=1)).timestamp()), i))
-        total_fruit += 10 * total_seed
         
         cursor.execute("""
             INSERT INTO "StatsDataRecord"
