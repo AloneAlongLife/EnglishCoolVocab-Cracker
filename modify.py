@@ -19,7 +19,7 @@ PETS_FRUIT = [
     50000
 ]
 
-def run_modify(target_level: int, pets: str, fruit: int, bg: int) -> int:
+def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int) -> int:
     db = sqlite3.connect("wordcool_user.db")
     cursor = db.cursor()
 
@@ -65,7 +65,7 @@ def run_modify(target_level: int, pets: str, fruit: int, bg: int) -> int:
 
     # 果園背景
     bg = ["0"] * 15
-    bg[target_level] = str(bg)
+    bg[target_level] = str(custom_bg)
     bg = "".join(bg)
     if cursor.execute("SELECT * FROM User WHERE key='orchardSceneBG'").fetchone():
         cursor.execute("UPDATE 'User' SET 'value'=? WHERE key='orchardSceneBG'", (bg,))
