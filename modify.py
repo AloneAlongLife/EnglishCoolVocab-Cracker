@@ -62,8 +62,14 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
     # 登入紀錄
     days_str = "1" * total_days
     days_str[8] = "0"
-    days_str[20] = "0"
+    days_str[9] = "0"
+    days_str[10] = "0"
     days_str[15] = "0"
+    days_str[20] = "0"
+    days_str[40] = "0"
+    days_str[41] = "0"
+    days_str[42] = "0"
+    days_str[43] = "0"
     if cursor.execute("SELECT * FROM User WHERE key='loginDays'").fetchone():
         cursor.execute("UPDATE 'User' SET 'value'=? WHERE key='loginDays'", ("1" * total_days,))
     else:
