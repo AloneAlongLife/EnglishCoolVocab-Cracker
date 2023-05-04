@@ -103,6 +103,22 @@ options = [
         description="全部種滿",
         default=False,
     ),
+    Option(
+        int,
+        name="toggle_rate",
+        description="收藏率",
+        default=10,
+        min_value=0,
+        max_value=100,
+    ),
+    Option(
+        int,
+        name="error_rate",
+        description="錯誤率",
+        default=15,
+        min_value=0,
+        max_value=100,
+    ),
 ]
 
 
@@ -117,7 +133,7 @@ async def run_task():
             if task_queue.empty():
                 await asleep(0.5)
                 continue
-            target_level, pets, fruit, bg, random_f, column, full, response, embed = await task_queue.get()
+            target_level, pets, fruit, bg, random_f, column, full, toggle_rate, error_rate, response, embed = await task_queue.get()
             embed.colour = 0xff8800
             embed.title = "備份碼生成中..."
             embed.description = f"備份碼生成中，請等待約30秒。"
@@ -134,7 +150,7 @@ async def run_task():
 
             try:
                 timer = time()
-                fruit, img = await loop.run_in_executor(None, gen, target_level, pets, fruit, bg, random_f, column, full)
+                fruit, img = await loop.run_in_executor(None, gen, target_level, pets, fruit, bg, random_f, column, full, toggle_rate, error_rate)
                 img_io = BytesIO(img)
                 pets_list: list = list(map(int, set(pets)))
                 pets_list.sort()
@@ -216,6 +232,8 @@ async def get_code(
     random_f: bool = False,
     column: bool = True,
     full: bool = False,
+    toggle_rate: int = 10,
+    error_rate: int = 15
 ):
     print(f"User: {ctx.author.display_name}")
     embed = Embed(
@@ -232,7 +250,7 @@ async def get_code(
     response = await ctx.respond(
         embed=embed,
     )
-    await task_queue.put((target_level, pets, fruit, bg, random_f, column, full, response, embed))
+    await task_queue.put((target_level, pets, fruit, bg, random_f, column, full, toggle_rate, error_rate, response, embed))
 
 
 @client.slash_command(

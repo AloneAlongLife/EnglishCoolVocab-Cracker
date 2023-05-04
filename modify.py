@@ -19,7 +19,17 @@ PETS_FRUIT = [
     50000
 ]
 
-def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_f: bool, column: bool, full: bool) -> int:
+def run_modify(
+        target_level: int = 5,
+        pets: str = "",
+        fruit: int = "-1",
+        custom_bg: int = 0,
+        random_f: bool = False,
+        column: bool = True,
+        full: bool = False,
+        toggle_rate: int = 10,
+        error_rate: int = 15
+    ) -> int:
     db = sqlite3.connect("wordcool_user.db")
     cursor = db.cursor()
 
@@ -202,7 +212,7 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
             UPDATE "LearningRecord"
             SET is_toggled=?, incorrect_answer=?
             WHERE id=?
-        """, ("1" if randint(1, 20) == 1 else "0", "6" if randint(1, 10) > 8 else "0", target_level * 1000 + i))
+        """, ("1" if randint(0, 99) < toggle_rate else "0", "6" if randint(0, 99) < error_rate else "0", target_level * 1000 + i))
 
     db.commit()
     cursor.close()
