@@ -165,9 +165,9 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
                 """, (i,))
                 cursor.execute("""
                     UPDATE "LearningRecord"
-                    SET is_toggled=?, correct_answer=24, incorrect_answer=?, learn_time=?
+                    SET correct_answer=6, learn_time=?
                     WHERE id BETWEEN ? AND ?
-                """, (int(randint(1, 20) == 1), randint(1, 10), nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
+                """, (nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
             elif offset in e:
                 water += 1
                 ind = e.index(offset)
@@ -178,10 +178,10 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
                 """, (ind + 2, ts(dt[ind]), i))
                 cursor.execute("""
                     UPDATE "LearningRecord"
-                    SET correct_answer=24, incorrect_answer=?, learn_time=?
+                    SET correct_answer=?, learn_time=?
                     WHERE id BETWEEN ? AND ?
-                """, (randint(1, 10), nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
-                # """, (ind + 1, randint(1, 8), nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
+                """, (ind + 1, nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
+                # """, (randint(1, 10), nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
             
             if offset >= 0:
                 cursor.execute("""
@@ -196,6 +196,13 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
             (?, ?, ?, "0", ?, ?, ?, "0", "0");
         """, (start_date.strftime("%Y%m%d"), seed, water, blue, seed+water, water * 10))
         start_date += timedelta(days=1)
+    
+    for i in range(len(farms) * 10):
+        cursor.execute("""
+            UPDATE "LearningRecord"
+            SET is_toggled=?, incorrect_answer=?
+            WHERE id=?
+        """, ("1" if randint(1, 20) == 1 else "0", "6" if randint(1, 10) > 7 else "0", target_level * 1000 + i))
 
     db.commit()
     cursor.close()
