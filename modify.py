@@ -41,7 +41,6 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
     farms = [0] * 5 + list(range(1, 96))
 
     if full:
-        print("Full")
         pre_day_farm = 100 // (total_days - 30)
         farms = []
         for i in range((total_days - 30)):
