@@ -32,7 +32,7 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
     elif column:
         new_farms = []
         for i in range(100):
-            new_farms.append(farms[5 * (i % 20) + i])
+            new_farms.append(farms[5 * (i % 20) + (i // 20)])
         farms = new_farms
     else:
         farms
