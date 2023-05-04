@@ -199,7 +199,7 @@ async def on_interaction(interaction: Interaction):
     if interaction.custom_id == "delete_code":
         await interaction.message.delete()
         return
-    return super(interaction)
+    return super(Interaction, interaction)
 
 
 @client.slash_command(
