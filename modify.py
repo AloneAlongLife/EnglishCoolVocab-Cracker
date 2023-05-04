@@ -165,9 +165,9 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
                 """, (i,))
                 cursor.execute("""
                     UPDATE "LearningRecord"
-                    SET is_toggled=?, correct_answer=15, incorrect_answer=?, learn_time=?
+                    SET is_toggled=?, correct_answer=24, incorrect_answer=?, learn_time=?
                     WHERE id BETWEEN ? AND ?
-                """, (int(randint(1, 10) == 1), randint(1, 8), nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
+                """, (int(randint(1, 20) == 1), randint(1, 10), nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
             elif offset in e:
                 water += 1
                 ind = e.index(offset)
@@ -178,9 +178,9 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
                 """, (ind + 2, ts(dt[ind]), i))
                 cursor.execute("""
                     UPDATE "LearningRecord"
-                    SET correct_answer=?, incorrect_answer=?, learn_time=?
+                    SET correct_answer=24, incorrect_answer=?, learn_time=?
                     WHERE id BETWEEN ? AND ?
-                """, (15, randint(1, 8), nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
+                """, (randint(1, 10), nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
                 # """, (ind + 1, randint(1, 8), nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
             
             if offset >= 0:
