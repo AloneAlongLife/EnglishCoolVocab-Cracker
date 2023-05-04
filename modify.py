@@ -19,14 +19,17 @@ PETS_FRUIT = [
     50000
 ]
 
-def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int) -> int:
+def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_f: bool) -> int:
     db = sqlite3.connect("wordcool_user.db")
     cursor = db.cursor()
 
     dt = [1, 2, 4, 8, 14]
     e = [1, 2, 4, 8, 16]
     farms = [0] * 5 + list(range(1, 96))
-    farms.sort(key=lambda x: randint(1, 1000))
+
+    if random_f:
+        farms.sort(key=lambda x: randint(1, 1000))
+    
     start_date = date(2023, 3, 1)
     start_datetime = datetime.combine(start_date, datetime.now().time())
 
