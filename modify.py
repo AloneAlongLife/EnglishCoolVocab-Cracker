@@ -41,6 +41,7 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
     farms = [0] * 5 + list(range(1, 96))
 
     if full:
+        print("Full")
         pre_day_farm = 100 // (total_days - 30)
         farms = []
         for i in range((total_days - 30)):
@@ -57,7 +58,7 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
             new_farms.append(farms[5 * (i % 20) + (i // 20)])
         farms = new_farms
     else:
-        farms
+        pass
 
     # 登入紀錄
     if cursor.execute("SELECT * FROM User WHERE key='loginDays'").fetchone():
