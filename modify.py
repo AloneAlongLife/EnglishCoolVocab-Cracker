@@ -61,19 +61,14 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
 
     # 登入紀錄
     days_str = "1" * total_days
-    days_str[8] = "0"
-    days_str[9] = "0"
-    days_str[10] = "0"
-    days_str[15] = "0"
-    days_str[20] = "0"
-    days_str[40] = "0"
-    days_str[41] = "0"
-    days_str[42] = "0"
-    days_str[43] = "0"
+    for i in range(5):
+        s = randint(0, total_days - 1)
+        for j in range(s, s + randint(1, 3)):
+            days_str[j] = "0"
     if cursor.execute("SELECT * FROM User WHERE key='loginDays'").fetchone():
-        cursor.execute("UPDATE 'User' SET 'value'=? WHERE key='loginDays'", ("1" * total_days,))
+        cursor.execute("UPDATE 'User' SET 'value'=? WHERE key='loginDays'", ("1" * days_str,))
     else:
-        cursor.execute("INSERT INTO 'User' ('key', 'value') VALUES ('loginDays', ?)", ("1" * total_days,))
+        cursor.execute("INSERT INTO 'User' ('key', 'value') VALUES ('loginDays', ?)", (days_str,))
 
     # 註冊日期
     if cursor.execute("SELECT * FROM User WHERE key='startDate'").fetchone():
@@ -169,9 +164,9 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
                 """, (i,))
                 cursor.execute("""
                     UPDATE "LearningRecord"
-                    SET correct_answer=5, incorrect_answer=1, learn_time=?
+                    SET is_toggled=?, correct_answer=15, incorrect_answer=?, learn_time=?
                     WHERE id BETWEEN ? AND ?
-                """, (nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
+                """, (randint(1, 7) == 7, randint(0, 7), nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
             elif offset in e:
                 water += 1
                 ind = e.index(offset)
