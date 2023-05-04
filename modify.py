@@ -159,7 +159,7 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
                 """, (i,))
                 cursor.execute("""
                     UPDATE "LearningRecord"
-                    SET correct_answer=6, learn_time=?
+                    SET correct_answer=5, incorrect_answer=1, learn_time=?
                     WHERE id BETWEEN ? AND ?
                 """, (nts(), target_level * 1000 + i * 10, target_level * 1000 + i * 10 + 9))
             elif offset in e:
