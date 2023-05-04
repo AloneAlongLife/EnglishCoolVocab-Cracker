@@ -8,7 +8,8 @@ from os import getpid, system
 from time import time, sleep
 from traceback import format_exc
 
-from discord import ApplicationContext, Bot, Embed, File, Interaction, Option
+from discord import ApplicationContext, Bot, ButtonStyle, Embed, File, Interaction, Option
+from discord.ui import View, Button
 
 # intents = Intents.default()
 # intents.message_content = True
@@ -125,6 +126,12 @@ async def run_task():
                 embed=embed,
             )
 
+            view = View(Button(
+                style=ButtonStyle.danger,
+                label="刪除訊息",
+                custom_id="delete_code"
+            ))
+
             try:
                 timer = time()
                 fruit, img = await loop.run_in_executor(None, gen, target_level, pets, fruit, bg, random_f, full, column)
@@ -163,7 +170,8 @@ async def run_task():
                 embed.set_image(url=message.attachments[0].url)
                 await message.edit(
                     embed=embed,
-                    attachments=[]
+                    attachments=[],
+                    view=view
                 )
             except CancelledError:
                 return
@@ -173,7 +181,8 @@ async def run_task():
                 embed.description = f"備份碼生成失敗!\n```{format_exc()}```"
 
                 await message.edit(
-                    embed=embed
+                    embed=embed,
+                    view=view
                 )
     except CancelledError:
         return
@@ -183,6 +192,12 @@ async def run_task():
 async def on_ready():
     print(f"{client.user.display_name} Start!")
     client.loop.create_task(run_task())
+
+
+@client.event
+async def on_interaction(interaction: Interaction):
+    if interaction.custom_id == "delete_code":
+        await interaction.message.delete()
 
 
 @client.slash_command(
