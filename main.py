@@ -171,7 +171,7 @@ async def run_task():
                 await message.edit(
                     embed=embed,
                     attachments=[],
-                    view=view
+                    # view=view
                 )
             except CancelledError:
                 return
@@ -182,7 +182,7 @@ async def run_task():
 
                 await message.edit(
                     embed=embed,
-                    view=view
+                    # view=view
                 )
     except CancelledError:
         return
@@ -194,12 +194,12 @@ async def on_ready():
     client.loop.create_task(run_task())
 
 
-@client.event
-async def on_interaction(interaction: Interaction):
-    if interaction.custom_id == "delete_code":
-        await interaction.message.delete()
-        return
-    return super(Interaction, interaction)
+# @client.event
+# async def on_interaction(interaction: Interaction):
+#     if interaction.custom_id == "delete_code":
+#         await interaction.message.delete()
+#         return
+#     return super(Interaction, interaction)
 
 
 @client.slash_command(
