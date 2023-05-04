@@ -57,7 +57,7 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
             new_farms.append(farms[5 * (i % 20) + (i // 20)])
         farms = new_farms
     else:
-        pass
+        farms = list(map(lambda farm: max(0, farm + randint(-2, 2)), farms))
 
     # 登入紀錄
     days_str = ["1"] * total_days
@@ -202,7 +202,7 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
             UPDATE "LearningRecord"
             SET is_toggled=?, incorrect_answer=?
             WHERE id=?
-        """, ("1" if randint(1, 20) == 1 else "0", "6" if randint(1, 10) > 7 else "0", target_level * 1000 + i))
+        """, ("1" if randint(1, 20) == 1 else "0", "6" if randint(1, 10) > 8 else "0", target_level * 1000 + i))
 
     db.commit()
     cursor.close()
