@@ -67,7 +67,7 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
             days_str[j] = "0"
     days_str = "".join(days_str)
     if cursor.execute("SELECT * FROM User WHERE key='loginDays'").fetchone():
-        cursor.execute("UPDATE 'User' SET 'value'=? WHERE key='loginDays'", ("1" * days_str,))
+        cursor.execute("UPDATE 'User' SET 'value'=? WHERE key='loginDays'", (days_str,))
     else:
         cursor.execute("INSERT INTO 'User' ('key', 'value') VALUES ('loginDays', ?)", (days_str,))
 
