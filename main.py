@@ -132,6 +132,7 @@ async def run_task():
                 ]), inline=False)
 
                 embed.add_field(name="字彙果數量", value=f"{fruit}顆", inline=False)
+                embed.add_field(name="隨機種植", value="是" if random_f else "否", inline=False)
                 embed.add_field(
                     name="目標果園", value=LEVELS[target_level - 1], inline=False)
                 embed.add_field(name="果園背景", value=BGS[bg], inline=False)
@@ -195,7 +196,7 @@ async def get_code(
     response = await ctx.respond(
         embed=embed,
     )
-    await task_queue.put(((target_level, pets, fruit, bg, random_f), response, embed))
+    await task_queue.put((target_level, pets, fruit, bg, random_f, response, embed))
 
 
 @client.slash_command(
