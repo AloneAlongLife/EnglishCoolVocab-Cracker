@@ -6,13 +6,13 @@ from time import sleep, time
 
 from cv2 import imencode
 
-def gen(target_level: int, pets: str, fruit: int, bg: int, random_f: bool, column: bool) -> tuple[int, bytes]:
+def gen(target_level: int, pets: str, fruit: int, bg: int, random_f: bool, column: bool, full: bool) -> tuple[int, bytes]:
     timer = time()
     stop()
     get_data()
     get_f_data()
 
-    fruit = run_modify(target_level - 1, pets, fruit, bg, random_f, column)
+    fruit = run_modify(target_level - 1, pets, fruit, bg, random_f, column, full)
     
     update_data()
     update_f_data()

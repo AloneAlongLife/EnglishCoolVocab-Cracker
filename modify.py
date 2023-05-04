@@ -19,23 +19,12 @@ PETS_FRUIT = [
     50000
 ]
 
-def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_f: bool, column: bool) -> int:
+def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_f: bool, column: bool, full: bool) -> int:
     db = sqlite3.connect("wordcool_user.db")
     cursor = db.cursor()
 
     dt = [1, 2, 4, 8, 14]
     e = [1, 2, 4, 8, 16]
-    farms = [0] * 5 + list(range(1, 96))
-
-    if random_f:
-        farms.sort(key=lambda x: randint(1, 1000))
-    elif column:
-        new_farms = []
-        for i in range(100):
-            new_farms.append(farms[5 * (i % 20) + (i // 20)])
-        farms = new_farms
-    else:
-        farms
     
     start_date = date(2023, 3, 1)
     start_datetime = datetime.combine(start_date, datetime.now().time())
@@ -48,6 +37,27 @@ def run_modify(target_level: int, pets: str, fruit: int, custom_bg: int, random_
         target_level = int(target_level) - 1
 
     total_days = (target_date - start_date).days + 1
+
+    farms = [0] * 5 + list(range(1, 96))
+
+    if full:
+        pre_day_farm = 100 // (total_days - 30)
+        farms = []
+        for i in range((total_days - 30)):
+            farms += [i] * (pre_day_farm + (i % 3))
+        empty_num = 100 - len(farms)
+        if empty_num > 0:
+            farms += [total_days - 31] * empty_num
+        farms = farms[:100]
+    elif random_f:
+        farms.sort(key=lambda x: randint(1, 1000))
+    elif column:
+        new_farms = []
+        for i in range(100):
+            new_farms.append(farms[5 * (i % 20) + (i // 20)])
+        farms = new_farms
+    else:
+        farms
 
     # 登入紀錄
     if cursor.execute("SELECT * FROM User WHERE key='loginDays'").fetchone():

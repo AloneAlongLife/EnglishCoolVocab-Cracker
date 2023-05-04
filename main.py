@@ -96,6 +96,12 @@ options = [
         description="直向種植",
         default=True,
     ),
+    Option(
+        bool,
+        name="full",
+        description="全部種滿",
+        default=False,
+    ),
 ]
 
 
@@ -110,7 +116,7 @@ async def run_task():
             if task_queue.empty():
                 await asleep(0.5)
                 continue
-            target_level, pets, fruit, bg, random_f, column, response, embed = await task_queue.get()
+            target_level, pets, fruit, bg, random_f, column, full, response, embed = await task_queue.get()
             embed.colour = 0xff8800
             embed.title = "備份碼生成中..."
             embed.description = f"備份碼生成中，請等待約30秒。"
@@ -121,7 +127,7 @@ async def run_task():
 
             try:
                 timer = time()
-                fruit, img = await loop.run_in_executor(None, gen, target_level, pets, fruit, bg, random_f, column)
+                fruit, img = await loop.run_in_executor(None, gen, target_level, pets, fruit, bg, random_f, full, column)
                 img_io = BytesIO(img)
                 pets_list: list = list(map(int, set(pets)))
                 pets_list.sort()
@@ -138,7 +144,9 @@ async def run_task():
                 ]), inline=False)
 
                 embed.add_field(name="字彙果數量", value=f"{fruit}顆", inline=False)
-                if random_f:
+                if full:
+                    embed.add_field(name="全部種滿", value="是", inline=False)
+                elif random_f:
                     embed.add_field(name="隨機種植", value="是", inline=False)
                 else:
                     embed.add_field(name="直向種植", value="是" if column else "否", inline=False)
@@ -189,7 +197,8 @@ async def get_code(
     fruit: int = -1,
     bg: int = 0,
     random_f: bool = False,
-    column: bool = True
+    column: bool = True,
+    full: bool = False,
 ):
     print(f"User: {ctx.author.display_name}")
     embed = Embed(
@@ -206,7 +215,7 @@ async def get_code(
     response = await ctx.respond(
         embed=embed,
     )
-    await task_queue.put((target_level, pets, fruit, bg, random_f, column, response, embed))
+    await task_queue.put((target_level, pets, fruit, bg, random_f, column, full, response, embed))
 
 
 @client.slash_command(
